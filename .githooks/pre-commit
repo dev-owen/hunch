@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+set -eu
+
+today="$(date +%F)"
+log_file="ai_journal/sessions/${today}.md"
+
+if [ ! -f "${log_file}" ]; then
+  echo "ERROR: Missing AI work log: ${log_file}"
+  echo "Create today's log with ./scripts/new_agent_log.sh before commit."
+  exit 1
+fi
+
+require_section() {
+  section="$1"
+  if ! grep -q "^${section}$" "${log_file}"; then
+    echo "ERROR: ${log_file} is missing section: ${section}"
+    exit 1
+  fi
+}
+
+require_section "## Prompt"
+require_section "## Plan"
+require_section "## Execution"
+
+echo "pre-commit check passed: ${log_file}"
+
