@@ -1,0 +1,27 @@
+{
+  "run_id": "20260429_142101",
+  "dataset": "eval_dataset_v0.jsonl",
+  "total_cases": 20,
+  "passed_cases": 20,
+  "pass_rate_percent": 100.0,
+  "average_scores": {
+    "understanding": 5.0,
+    "structuring_quality": 5.0,
+    "pattern_use": 4.75,
+    "healthiness": 4.1,
+    "actionability": 4.1
+  },
+  "overall_average_score": 4.59,
+  "failure_counts": {
+    "generic_answer": 0,
+    "false_personalization": 8,
+    "negativity_reinforcement": 0,
+    "value_overreach": 0,
+    "memory_confusion": 0,
+    "action_vacuum": 0
+  },
+  "generated_files": {
+    "results_jsonl": "eval_runs/20260429_142101/results.jsonl",
+    "answers_md": "eval_runs/20260429_142101/answers.md"
+  }
+}
