@@ -20,6 +20,13 @@ SECTION_HEADERS = [
     "## Reframing",
     "## Next Small Step (24-72h)",
 ]
+SECTION_HEADERS_KO = [
+    "## 내가 바라는 것",
+    "## 현재 현실",
+    "## 숨어 있는 긴장",
+    "## 리프레이밍",
+    "## 다음 작은 행동 (24-72시간)",
+]
 
 ACTION_WORDS = {
     "write",
@@ -34,10 +41,47 @@ ACTION_WORDS = {
     "review",
     "track",
     "log",
+    "적어",
+    "작성",
+    "보내",
+    "정하",
+    "잡고",
+    "기록",
+    "실험",
+    "리뷰",
+    "산책",
 }
 
-TIME_WORDS = {"24", "48", "72", "hour", "hours", "today", "tomorrow", "week", "days"}
-NEGATIVE_WORDS = {"hopeless", "worthless", "coward", "broken", "no way out", "failure forever"}
+TIME_WORDS = {
+    "24",
+    "48",
+    "72",
+    "hour",
+    "hours",
+    "today",
+    "tomorrow",
+    "week",
+    "days",
+    "시간",
+    "오늘",
+    "내일",
+    "이번",
+    "주",
+    "일",
+}
+NEGATIVE_WORDS = {
+    "hopeless",
+    "worthless",
+    "coward",
+    "broken",
+    "no way out",
+    "failure forever",
+    "희망이 없다",
+    "가치 없다",
+    "망했다",
+    "겁쟁이",
+    "고장났다",
+}
 
 FAILURE_TAGS = [
     "generic_answer",
@@ -55,6 +99,12 @@ def extract_next_step(answer_markdown: str) -> str:
         answer_markdown,
         flags=re.DOTALL,
     )
+    if not match:
+        match = re.search(
+            r"## 다음 작은 행동 \(24-72시간\)\n- (.+)",
+            answer_markdown,
+            flags=re.DOTALL,
+        )
     if not match:
         return ""
     line = match.group(1).strip()
@@ -78,7 +128,9 @@ def count_condition_hits(conditions: Iterable[str], answer_text: str) -> int:
 def score_case(case: Dict, answer: Dict) -> Dict:
     text = answer["answer_markdown"]
     text_lower = text.lower()
-    section_count = sum(1 for h in SECTION_HEADERS if h in text)
+    section_count_en = sum(1 for h in SECTION_HEADERS if h in text)
+    section_count_ko = sum(1 for h in SECTION_HEADERS_KO if h in text)
+    section_count = max(section_count_en, section_count_ko)
 
     understanding = 2
     evidence_count = len(answer.get("evidence_ids_used", []))
@@ -92,24 +144,43 @@ def score_case(case: Dict, answer: Dict) -> Dict:
     structuring = 1 + min(4, section_count - 1) if section_count else 1
 
     pattern = 2
-    if "tension" in text_lower:
+    if "tension" in text_lower or "긴장" in text:
         pattern = 3
-    pattern_indicators = ("when ", "after ", "then ", "pattern", "trigger", "compare", "panic")
+    pattern_indicators = (
+        "when ",
+        "after ",
+        "then ",
+        "pattern",
+        "trigger",
+        "compare",
+        "panic",
+        "때",
+        "후",
+        "패턴",
+        "비교",
+        "패닉",
+        "불안",
+    )
     if any(w in text_lower for w in pattern_indicators):
         pattern = 4
-    if any(w in text_lower for w in ("repeated", "cycle", "all-or-nothing")):
+    if any(w in text_lower for w in ("repeated", "cycle", "all-or-nothing", "반복", "전부 아니면 전무")):
         pattern = 5
 
     healthiness = 4
     if any(w in text_lower for w in NEGATIVE_WORDS):
         healthiness = 2
-    if "not opposites" in text_lower or "not a personal failure" in text_lower:
+    if (
+        "not opposites" in text_lower
+        or "not a personal failure" in text_lower
+        or "충돌만 하는 것이 아니라" in text
+        or "개인의 실패가 아니라" in text
+    ):
         healthiness = min(5, healthiness + 1)
 
     action = 2
     next_step = extract_next_step(text).lower()
     next_tokens = set(tokenize(next_step))
-    has_action_verb = bool(next_tokens & ACTION_WORDS)
+    has_action_verb = bool(next_tokens & ACTION_WORDS) or any(w in next_step for w in ACTION_WORDS)
     has_time_anchor = any(w in next_step for w in TIME_WORDS)
     if next_step:
         action = 3
@@ -156,10 +227,16 @@ def score_case(case: Dict, answer: Dict) -> Dict:
         "you are cowardly",
         "you always",
         "you never",
+        "당신은 게으른",
+        "당신은 고장",
+        "당신은 불안정",
+        "당신은 겁쟁이",
+        "당신은 항상",
+        "당신은 절대",
     )
     if any(phrase in text_lower for phrase in unsupported_identity_claims):
         failures.append("false_personalization")
-    if ("must" in text_lower or "obviously" in text_lower) and evidence_count < 2:
+    if ("must" in text_lower or "obviously" in text_lower or "반드시" in text or "당연히" in text) and evidence_count < 2:
         failures.append("value_overreach")
 
     # Deduplicate while preserving order.
