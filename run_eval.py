@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Iterable, List
@@ -262,6 +262,16 @@ def score_case(case: Dict, answer: Dict) -> Dict:
     }
 
 
+def average_scores(score_totals: Dict[str, int], count: int) -> Dict[str, float]:
+    if count <= 0:
+        return {}
+    return {k: round(v / count, 2) for k, v in score_totals.items()}
+
+
+def overall_average(scores: Dict[str, float]) -> float:
+    return round(sum(scores.values()) / len(scores), 2) if scores else 0.0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run Hunch v0 eval harness.")
     parser.add_argument(
@@ -286,28 +296,52 @@ def main() -> int:
     result_rows: List[Dict] = []
     score_totals = Counter()
     failure_counts = Counter()
+    source_type_case_counts = Counter()
+    source_type_used_counts = Counter()
+    source_type_mix_counts = Counter()
+    source_type_score_totals = defaultdict(Counter)
+    source_type_pass_counts = Counter()
+    mix_score_totals = defaultdict(Counter)
+    mix_pass_counts = Counter()
     passed = 0
 
     for case in cases:
         answer = generate_for_case(case)
         judged = score_case(case, answer)
+        source_types_available = answer.get("source_types_available", [])
+        source_types_used = answer.get("source_types_used", [])
+        mix_key = "single_source" if len(source_types_available) == 1 else "multi_source"
         row = {
             "case_id": case.get("case_id"),
             "user_id": case.get("user_id"),
             "query": case.get("query"),
+            "language": answer.get("language"),
             **judged,
             "evidence_ids_used": answer.get("evidence_ids_used", []),
             "retrieved_record_ids": answer.get("retrieved_record_ids", []),
+            "source_types_available": source_types_available,
+            "source_types_used": source_types_used,
             "answer_markdown": answer.get("answer_markdown", ""),
         }
         result_rows.append(row)
 
         for axis, score in judged["scores"].items():
             score_totals[axis] += score
+            mix_score_totals[mix_key][axis] += score
+            for source_type in source_types_available:
+                source_type_score_totals[source_type][axis] += score
         for f in judged["detected_failures"]:
             failure_counts[f] += 1
+        for source_type in source_types_available:
+            source_type_case_counts[source_type] += 1
+        for source_type in source_types_used:
+            source_type_used_counts[source_type] += 1
+        source_type_mix_counts[mix_key] += 1
         if judged["pass"]:
             passed += 1
+            mix_pass_counts[mix_key] += 1
+            for source_type in source_types_available:
+                source_type_pass_counts[source_type] += 1
 
     result_jsonl = run_dir / "results.jsonl"
     with result_jsonl.open("w", encoding="utf-8") as f:
@@ -323,9 +357,30 @@ def main() -> int:
             f.write("\n\n---\n\n")
 
     n = len(result_rows) if result_rows else 1
-    avg_scores = {k: round(v / n, 2) for k, v in score_totals.items()}
-    overall_avg = round(sum(avg_scores.values()) / len(avg_scores), 2) if avg_scores else 0.0
+    avg_scores = average_scores(score_totals, n)
+    overall_avg = overall_average(avg_scores)
     pass_rate = round((passed / n) * 100, 1)
+
+    average_scores_by_source_type = {}
+    overall_average_by_source_type = {}
+    pass_rate_by_source_type = {}
+    for source_type, count in sorted(source_type_case_counts.items()):
+        source_scores = average_scores(source_type_score_totals[source_type], count)
+        average_scores_by_source_type[source_type] = source_scores
+        overall_average_by_source_type[source_type] = overall_average(source_scores)
+        pass_rate_by_source_type[source_type] = round(
+            (source_type_pass_counts[source_type] / count) * 100,
+            1,
+        )
+
+    average_scores_by_mix = {}
+    overall_average_by_mix = {}
+    pass_rate_by_mix = {}
+    for mix_key, count in sorted(source_type_mix_counts.items()):
+        mix_scores = average_scores(mix_score_totals[mix_key], count)
+        average_scores_by_mix[mix_key] = mix_scores
+        overall_average_by_mix[mix_key] = overall_average(mix_scores)
+        pass_rate_by_mix[mix_key] = round((mix_pass_counts[mix_key] / count) * 100, 1)
 
     summary = {
         "run_id": run_id,
@@ -335,6 +390,15 @@ def main() -> int:
         "pass_rate_percent": pass_rate,
         "average_scores": avg_scores,
         "overall_average_score": overall_avg,
+        "source_type_case_counts": dict(sorted(source_type_case_counts.items())),
+        "source_type_used_counts": dict(sorted(source_type_used_counts.items())),
+        "source_type_mix_counts": dict(sorted(source_type_mix_counts.items())),
+        "average_scores_by_source_type": average_scores_by_source_type,
+        "overall_average_by_source_type": overall_average_by_source_type,
+        "pass_rate_by_source_type": pass_rate_by_source_type,
+        "average_scores_by_mix": average_scores_by_mix,
+        "overall_average_by_mix": overall_average_by_mix,
+        "pass_rate_by_mix": pass_rate_by_mix,
         "failure_counts": {k: failure_counts.get(k, 0) for k in FAILURE_TAGS},
         "generated_files": {
             "results_jsonl": str(result_jsonl),

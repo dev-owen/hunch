@@ -21,9 +21,13 @@ SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?。！？])\s+")
 DESIRE_CUES = (
     "i want",
     "i value",
+    "i hope",
     "matters more",
     "i care about",
+    "i care",
     "원해",
+    "원하",
+    "원한",
     "바라",
     "가치",
     "중요",
@@ -34,6 +38,18 @@ DESIRE_CUES = (
 CONSTRAINT_CUES = (
     "depend on",
     "runway",
+    "budget",
+    "mortgage",
+    "deadline",
+    "caregiving",
+    "childcare",
+    "energy",
+    "customer",
+    "users",
+    "workflow",
+    "setup",
+    "activation",
+    "confusing",
     "cannot",
     "can't",
     "adds ",
@@ -50,6 +66,18 @@ CONSTRAINT_CUES = (
     "현실",
     "제약",
     "수면",
+    "비용",
+    "예산",
+    "마감",
+    "아이",
+    "가족",
+    "에너지",
+    "고객",
+    "사용자",
+    "온보딩",
+    "흐름",
+    "헷갈",
+    "설정",
 )
 PATTERN_CUES = (
     "when ",
@@ -61,6 +89,9 @@ PATTERN_CUES = (
     "rush",
     "avoid",
     "skip",
+    "doom-scroll",
+    "overthink",
+    "freeze",
     "때",
     "후",
     "비교",
@@ -71,6 +102,9 @@ PATTERN_CUES = (
     "반복",
     "건너뛰",
     "패닉",
+    "망설",
+    "얼어붙",
+    "몰아",
 )
 GROWTH_CUES = (
     "improved",
@@ -137,6 +171,14 @@ def load_jsonl(path: Path) -> List[Dict]:
                 continue
             rows.append(json.loads(line))
     return rows
+
+
+def record_source_type(record: Dict) -> str:
+    return record.get("source_type") or record.get("type") or "unknown"
+
+
+def source_types_for(records: Sequence[Dict]) -> List[str]:
+    return sorted({record_source_type(r) for r in records})
 
 
 def retrieve_records(query: str, records: Sequence[Dict], top_k: int = 3) -> List[Dict]:
@@ -217,6 +259,16 @@ def pick_line(items: Sequence[Tuple[str, str]], fallback: str) -> Tuple[str, Lis
 
 def infer_next_step(query: str, language: str) -> str:
     q = query.lower()
+    if any(k in q for k in ("sleep", "health", "workout", "수면", "건강", "운동")):
+        if language == "ko":
+            return (
+                "앞으로 3일 동안 퇴근 마감 시간을 하나 정하고 20분 산책을 한 뒤, 매일 아침 "
+                "수면 질을 한 줄로 기록하세요."
+            )
+        return (
+            "For the next 3 days, set a hard stop-work time and complete one 20-minute walk, "
+            "then log sleep quality in one line each morning."
+        )
     if any(k in q for k in ("job", "role", "career", "salary", "apply", "promotion", "직장", "커리어", "연봉", "지원", "승진", "이직")):
         if language == "ko":
             return (
@@ -256,16 +308,6 @@ def infer_next_step(query: str, language: str) -> str:
         return (
             "Before any major pivot this week, run one bounded experiment with a clear success "
             "metric and review it in a 30-minute decision check."
-        )
-    if any(k in q for k in ("sleep", "health", "workout", "수면", "건강", "운동")):
-        if language == "ko":
-            return (
-                "앞으로 3일 동안 퇴근 마감 시간을 하나 정하고 20분 산책을 한 뒤, 매일 아침 "
-                "수면 질을 한 줄로 기록하세요."
-            )
-        return (
-            "For the next 3 days, set a hard stop-work time and complete one 20-minute walk, "
-            "then log sleep quality in one line each morning."
         )
     if language == "ko":
         return (
@@ -343,6 +385,16 @@ def generate_for_case(case: Dict) -> Dict:
             unique_evidence.append(eid)
             seen.add(eid)
 
+    record_by_id = {rec.get("id"): rec for rec in records if rec.get("id")}
+    source_types_available = source_types_for(records)
+    source_types_used = sorted(
+        {
+            record_source_type(record_by_id[eid])
+            for eid in unique_evidence
+            if eid in record_by_id
+        }
+    )
+
     next_step = infer_next_step(query, language)
 
     what_you_want = normalize_sentence(want_line)
@@ -397,6 +449,8 @@ def generate_for_case(case: Dict) -> Dict:
         "answer_markdown": answer_md,
         "evidence_ids_used": unique_evidence,
         "retrieved_record_ids": [r.get("id") for r in retrieved if r.get("id")],
+        "source_types_available": source_types_available,
+        "source_types_used": source_types_used,
         "risk_flags": risk_flags,
         "self_model_fields_used": [
             "core_desires",

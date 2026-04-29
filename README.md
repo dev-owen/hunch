@@ -23,6 +23,7 @@ Hunch는 사용자의 메모와 대화 맥락을 바탕으로, 이상과 현실 
 - `eval_rubric_v0.md`: 초기 평가 루브릭
 - `eval_dataset_v0.jsonl`: 골든 테스트셋 20문항
 - `eval_dataset_v0_ko.jsonl`: 한국어 골든 테스트셋 20문항
+- `eval_dataset_v0_source_types.jsonl`: `note`, `chat`, `writing`, `video_transcript` 단일/복수 source type 테스트셋 20문항
 - `generate_answer.py`: v0 구조화 답변 생성기
 - `run_eval.py`: v0 평가 하네스
 - `ai_journal/`: AI 작업 기록(프롬프트/플랜/실행 로그)
@@ -31,6 +32,7 @@ Hunch는 사용자의 메모와 대화 맥락을 바탕으로, 이상과 현실 
 ```bash
 python3 run_eval.py --dataset eval_dataset_v0.jsonl --output-dir eval_runs
 python3 run_eval.py --dataset eval_dataset_v0_ko.jsonl --output-dir eval_runs_ko
+python3 run_eval.py --dataset eval_dataset_v0_source_types.jsonl --output-dir eval_runs_source_types
 ```
 
 ## 개발 원칙 (v0)

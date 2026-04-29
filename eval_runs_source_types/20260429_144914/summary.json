@@ -1,0 +1,109 @@
+{
+  "run_id": "20260429_144914",
+  "dataset": "eval_dataset_v0_source_types.jsonl",
+  "total_cases": 20,
+  "passed_cases": 20,
+  "pass_rate_percent": 100.0,
+  "average_scores": {
+    "understanding": 4.55,
+    "structuring_quality": 5.0,
+    "pattern_use": 4.45,
+    "healthiness": 4.5,
+    "actionability": 4.5
+  },
+  "overall_average_score": 4.6,
+  "source_type_case_counts": {
+    "chat": 12,
+    "note": 12,
+    "video_transcript": 10,
+    "writing": 12
+  },
+  "source_type_used_counts": {
+    "chat": 12,
+    "note": 12,
+    "video_transcript": 9,
+    "writing": 11
+  },
+  "source_type_mix_counts": {
+    "multi_source": 16,
+    "single_source": 4
+  },
+  "average_scores_by_source_type": {
+    "chat": {
+      "understanding": 4.75,
+      "structuring_quality": 5.0,
+      "pattern_use": 4.5,
+      "healthiness": 4.58,
+      "actionability": 4.58
+    },
+    "note": {
+      "understanding": 4.75,
+      "structuring_quality": 5.0,
+      "pattern_use": 4.5,
+      "healthiness": 4.42,
+      "actionability": 4.42
+    },
+    "video_transcript": {
+      "understanding": 4.7,
+      "structuring_quality": 5.0,
+      "pattern_use": 4.2,
+      "healthiness": 4.5,
+      "actionability": 4.5
+    },
+    "writing": {
+      "understanding": 4.67,
+      "structuring_quality": 5.0,
+      "pattern_use": 4.42,
+      "healthiness": 4.42,
+      "actionability": 4.42
+    }
+  },
+  "overall_average_by_source_type": {
+    "chat": 4.68,
+    "note": 4.62,
+    "video_transcript": 4.58,
+    "writing": 4.59
+  },
+  "pass_rate_by_source_type": {
+    "chat": 100.0,
+    "note": 100.0,
+    "video_transcript": 100.0,
+    "writing": 100.0
+  },
+  "average_scores_by_mix": {
+    "multi_source": {
+      "understanding": 4.75,
+      "structuring_quality": 5.0,
+      "pattern_use": 4.44,
+      "healthiness": 4.5,
+      "actionability": 4.5
+    },
+    "single_source": {
+      "understanding": 3.75,
+      "structuring_quality": 5.0,
+      "pattern_use": 4.5,
+      "healthiness": 4.5,
+      "actionability": 4.5
+    }
+  },
+  "overall_average_by_mix": {
+    "multi_source": 4.64,
+    "single_source": 4.45
+  },
+  "pass_rate_by_mix": {
+    "multi_source": 100.0,
+    "single_source": 100.0
+  },
+  "failure_counts": {
+    "generic_answer": 0,
+    "false_personalization": 0,
+    "negativity_reinforcement": 0,
+    "value_overreach": 0,
+    "memory_confusion": 0,
+    "action_vacuum": 0
+  },
+  "generated_files": {
+    "results_jsonl": "eval_runs_source_types/20260429_144914/results.jsonl",
+    "answers_md": "eval_runs_source_types/20260429_144914/answers.md"
+  }
+}

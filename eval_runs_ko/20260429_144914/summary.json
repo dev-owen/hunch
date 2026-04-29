@@ -1,0 +1,77 @@
+{
+  "run_id": "20260429_144914",
+  "dataset": "eval_dataset_v0_ko.jsonl",
+  "total_cases": 20,
+  "passed_cases": 20,
+  "pass_rate_percent": 100.0,
+  "average_scores": {
+    "understanding": 5.0,
+    "structuring_quality": 5.0,
+    "pattern_use": 4.1,
+    "healthiness": 4.9,
+    "actionability": 4.9
+  },
+  "overall_average_score": 4.78,
+  "source_type_case_counts": {
+    "chat": 20,
+    "note": 20
+  },
+  "source_type_used_counts": {
+    "chat": 20,
+    "note": 20
+  },
+  "source_type_mix_counts": {
+    "multi_source": 20
+  },
+  "average_scores_by_source_type": {
+    "chat": {
+      "understanding": 5.0,
+      "structuring_quality": 5.0,
+      "pattern_use": 4.1,
+      "healthiness": 4.9,
+      "actionability": 4.9
+    },
+    "note": {
+      "understanding": 5.0,
+      "structuring_quality": 5.0,
+      "pattern_use": 4.1,
+      "healthiness": 4.9,
+      "actionability": 4.9
+    }
+  },
+  "overall_average_by_source_type": {
+    "chat": 4.78,
+    "note": 4.78
+  },
+  "pass_rate_by_source_type": {
+    "chat": 100.0,
+    "note": 100.0
+  },
+  "average_scores_by_mix": {
+    "multi_source": {
+      "understanding": 5.0,
+      "structuring_quality": 5.0,
+      "pattern_use": 4.1,
+      "healthiness": 4.9,
+      "actionability": 4.9
+    }
+  },
+  "overall_average_by_mix": {
+    "multi_source": 4.78
+  },
+  "pass_rate_by_mix": {
+    "multi_source": 100.0
+  },
+  "failure_counts": {
+    "generic_answer": 0,
+    "false_personalization": 0,
+    "negativity_reinforcement": 0,
+    "value_overreach": 0,
+    "memory_confusion": 0,
+    "action_vacuum": 0
+  },
+  "generated_files": {
+    "results_jsonl": "eval_runs_ko/20260429_144914/results.jsonl",
+    "answers_md": "eval_runs_ko/20260429_144914/answers.md"
+  }
+}
