@@ -15,7 +15,27 @@ This schema is for long-term self memory only.
   "emotional_patterns": [],
   "values": [],
   "growth_signals": [],
-  "temporary_state": []
+  "temporary_state": [],
+  "identity_statements": [],
+  "open_questions": []
+}
+```
+
+## Standard Claim Metadata
+Every self model item should behave like an evidence-backed claim.
+
+```json
+{
+  "id": "core_desires:career-product-influence",
+  "field": "core_desires",
+  "label": "Wants more product influence",
+  "evidence_ids": ["n01", "c04"],
+  "source_types": ["note", "chat"],
+  "confidence": 0.72,
+  "first_seen": "2026-04-21",
+  "last_seen": "2026-05-12",
+  "stability": "temporary | recurring | stable",
+  "status": "candidate | active | under_review | retired"
 }
 ```
 
@@ -108,6 +128,16 @@ This schema is for long-term self memory only.
 }
 ```
 
+### `identity_statements`
+- Purpose: user-authored identity or self-description statements that need careful confirmation
+- Item shape follows standard claim metadata.
+- Safety rule: keep as `candidate` unless the user explicitly confirms it.
+
+### `open_questions`
+- Purpose: unresolved questions Hunch should keep asking gently over time
+- Item shape follows standard claim metadata.
+- Safety rule: use these to guide future conversation, not to infer identity.
+
 ## Update Rules (v0)
 1. Promote a candidate to long-term memory only if:
 - observed in at least 2 independent records
@@ -124,4 +154,3 @@ This schema is for long-term self memory only.
 - Evidence-first: each claim must map to `evidence_ids`.
 - No hard labels like "you are always X."
 - Long-term traits must be stable across time, not mood snapshots.
-

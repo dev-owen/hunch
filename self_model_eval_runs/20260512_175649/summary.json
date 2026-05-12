@@ -1,0 +1,20 @@
+{
+  "run_id": "20260512_175649",
+  "dataset": "eval_dataset_v0_source_types.jsonl",
+  "total_users": 5,
+  "passed_users": 4,
+  "pass_rate_percent": 80.0,
+  "average_scores": {
+    "evidence_grounding": 5.0,
+    "field_coverage": 4.4,
+    "source_coverage": 4.6,
+    "promotion_safety": 5.0,
+    "actionability_for_future_answers": 3.6
+  },
+  "overall_average_score": 4.52,
+  "generated_files": {
+    "self_models": "self_model_eval_runs/20260512_175649/self_models.json",
+    "changelog": "self_model_eval_runs/20260512_175649/changelog.jsonl",
+    "results": "self_model_eval_runs/20260512_175649/results.json"
+  }
+}

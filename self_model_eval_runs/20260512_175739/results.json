@@ -1,0 +1,173 @@
+[
+  {
+    "user_id": "source_alex",
+    "scores": {
+      "evidence_grounding": 5,
+      "field_coverage": 4,
+      "source_coverage": 5,
+      "promotion_safety": 5,
+      "actionability_for_future_answers": 5
+    },
+    "average_score": 4.8,
+    "pass": true,
+    "claim_count": 7,
+    "active_claim_count": 5,
+    "available_source_types": [
+      "chat",
+      "note",
+      "video_transcript",
+      "writing"
+    ],
+    "used_source_types": [
+      "chat",
+      "note",
+      "video_transcript",
+      "writing"
+    ],
+    "fields_with_claims": [
+      "constraints",
+      "core_desires",
+      "emotional_patterns",
+      "growth_signals",
+      "recurring_conflicts"
+    ]
+  },
+  {
+    "user_id": "source_daniel",
+    "scores": {
+      "evidence_grounding": 5,
+      "field_coverage": 4,
+      "source_coverage": 5,
+      "promotion_safety": 5,
+      "actionability_for_future_answers": 5
+    },
+    "average_score": 4.8,
+    "pass": true,
+    "claim_count": 10,
+    "active_claim_count": 5,
+    "available_source_types": [
+      "chat",
+      "note",
+      "video_transcript",
+      "writing"
+    ],
+    "used_source_types": [
+      "chat",
+      "note",
+      "video_transcript",
+      "writing"
+    ],
+    "fields_with_claims": [
+      "constraints",
+      "emotional_patterns",
+      "growth_signals",
+      "identity_statements",
+      "recurring_conflicts",
+      "values"
+    ]
+  },
+  {
+    "user_id": "source_jin",
+    "scores": {
+      "evidence_grounding": 5,
+      "field_coverage": 4,
+      "source_coverage": 5,
+      "promotion_safety": 5,
+      "actionability_for_future_answers": 3
+    },
+    "average_score": 4.4,
+    "pass": true,
+    "claim_count": 7,
+    "active_claim_count": 2,
+    "available_source_types": [
+      "chat",
+      "note",
+      "video_transcript",
+      "writing"
+    ],
+    "used_source_types": [
+      "chat",
+      "note",
+      "video_transcript",
+      "writing"
+    ],
+    "fields_with_claims": [
+      "constraints",
+      "core_desires",
+      "emotional_patterns",
+      "growth_signals",
+      "identity_statements",
+      "recurring_conflicts"
+    ]
+  },
+  {
+    "user_id": "source_mina",
+    "scores": {
+      "evidence_grounding": 5,
+      "field_coverage": 5,
+      "source_coverage": 5,
+      "promotion_safety": 5,
+      "actionability_for_future_answers": 3
+    },
+    "average_score": 4.6,
+    "pass": true,
+    "claim_count": 11,
+    "active_claim_count": 2,
+    "available_source_types": [
+      "chat",
+      "note",
+      "video_transcript",
+      "writing"
+    ],
+    "used_source_types": [
+      "chat",
+      "note",
+      "video_transcript",
+      "writing"
+    ],
+    "fields_with_claims": [
+      "constraints",
+      "emotional_patterns",
+      "growth_signals",
+      "identity_statements",
+      "open_questions",
+      "recurring_conflicts",
+      "temporary_state",
+      "values"
+    ]
+  },
+  {
+    "user_id": "source_sora",
+    "scores": {
+      "evidence_grounding": 5,
+      "field_coverage": 5,
+      "source_coverage": 3,
+      "promotion_safety": 5,
+      "actionability_for_future_answers": 3
+    },
+    "average_score": 4.2,
+    "pass": true,
+    "claim_count": 11,
+    "active_claim_count": 2,
+    "available_source_types": [
+      "chat",
+      "note",
+      "video_transcript",
+      "writing"
+    ],
+    "used_source_types": [
+      "chat",
+      "note",
+      "writing"
+    ],
+    "fields_with_claims": [
+      "core_desires",
+      "emotional_patterns",
+      "growth_signals",
+      "identity_statements",
+      "recurring_conflicts",
+      "temporary_state",
+      "values"
+    ]
+  }
+]

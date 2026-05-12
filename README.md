@@ -19,6 +19,7 @@ Hunch는 사용자의 메모와 대화 맥락을 바탕으로, 이상과 현실 
 - `hunch_product_brief.md`: 제품 브리프 원문
 - `v0_use_case.md`: v0 단일 문제 정의 및 실패 유형
 - `user_model_schema.md`: Self Model v0 스키마/업데이트 규칙
+- `self_model_update_pipeline.md`: 근거 기반 Self Model 업데이트 루프
 - `response_contract.md`: 답변 포맷 계약
 - `eval_rubric_v0.md`: 초기 평가 루브릭
 - `eval_dataset_v0.jsonl`: 골든 테스트셋 20문항
@@ -26,6 +27,8 @@ Hunch는 사용자의 메모와 대화 맥락을 바탕으로, 이상과 현실 
 - `eval_dataset_v0_source_types.jsonl`: `note`, `chat`, `writing`, `video_transcript` 단일/복수 source type 테스트셋 20문항
 - `generate_answer.py`: v0 구조화 답변 생성기
 - `run_eval.py`: v0 평가 하네스
+- `update_self_model.py`: 입력 기록에서 Self Model claim 생성/병합/승격
+- `run_self_model_eval.py`: Self Model 업데이트 품질 평가 하네스
 - `ai_journal/`: AI 작업 기록(프롬프트/플랜/실행 로그)
 
 ## 평가 실행
@@ -33,6 +36,8 @@ Hunch는 사용자의 메모와 대화 맥락을 바탕으로, 이상과 현실 
 python3 run_eval.py --dataset eval_dataset_v0.jsonl --output-dir eval_runs
 python3 run_eval.py --dataset eval_dataset_v0_ko.jsonl --output-dir eval_runs_ko
 python3 run_eval.py --dataset eval_dataset_v0_source_types.jsonl --output-dir eval_runs_source_types
+python3 update_self_model.py --dataset eval_dataset_v0_source_types.jsonl --output-dir self_model_runs
+python3 run_self_model_eval.py --dataset eval_dataset_v0_source_types.jsonl --output-dir self_model_eval_runs
 ```
 
 ## 개발 원칙 (v0)
